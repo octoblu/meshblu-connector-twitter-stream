@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-twitter-stream",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Meshblu Connector ",
   "homepage": "https://github.com/octoblu/twitter-stream",
   "bugs": "https://github.com/octoblu/twitter-stream/issues",
@@ -28,13 +28,14 @@
   "dependencies": {
     "coffee-script": "^1.10.0",
     "debug": "^2.2.0",
-    "eventemitter2": "^1.0.0",
+    "lodash": "^4.13.1",
     "meshblu-config": "^4.0.0",
-    "meshblu-connector-runner": "^6.0.0"
+    "meshblu-connector-runner": "^6.0.0",
+    "twitter": "^1.3.0"
   },
   "meshbluConnector": {
     "githubSlug": "octoblu/meshblu-connector-twitter-stream",
-    "schemasUrl": "https://raw.githubusercontent.com/octoblu/meshblu-connector-twitter-stream/v1.0.0/schemas.json"
+    "schemasUrl": "https://raw.githubusercontent.com/octoblu/meshblu-connector-twitter-stream/v1.0.1/schemas.json"
   },
   "platformDependencies": {
     "darwin": [],
