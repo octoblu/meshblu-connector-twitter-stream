@@ -23,7 +23,7 @@ class TwitterStreamConnector extends EventEmitter
   onMessage: (message) =>
     return unless message.payload?
     { request, command } = message.payload
-    action = COMMANDS[command]
+    action = @COMMANDS[command]
     return unless action?
     debug 'running command', command
     @[action](request)

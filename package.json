@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-twitter-stream",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Meshblu Connector ",
   "homepage": "https://github.com/octoblu/twitter-stream",
   "bugs": "https://github.com/octoblu/twitter-stream/issues",
