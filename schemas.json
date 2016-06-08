@@ -1,78 +1,61 @@
 {
   "schemas": {
     "version": "1.0.0",
-    "form": {
-      "message": {
-        "example-01": {
-          "angular": {
-            "schema": ["*"]
-          }
-        }
-      }
-    },
     "configure": {
       "default-config": {
+        "title": "Default Configuration",
         "type": "object",
         "properties": {
           "options": {
             "type": "object",
             "properties": {
               "searchQuery": {
-                "type": "string",
-                "required": true
-              },
+                "title": "Search Query",
+                "type": "string"
+              }
+            },
+            "required": ["searchQuery"]
+          },
+          "credentials": {
+            "type": "object",
+            "properties": {
               "consumerKey": {
-                "type": "string",
-                "required": true
+                "title": "Twitter API Consumer Key",
+                "type": "string"
               },
               "consumerSecret": {
-                "type": "string",
-                "required": true
+                "title": "Twitter API Consumer Secret",
+                "type": "string"
               },
               "accessTokenKey": {
-                "type": "string",
-                "required": true
+                "title": "Twitter API Access Token Key",
+                "type": "string"
               },
               "accessTokenSecret": {
-                "type": "string",
-                "required": true
+                "title": "Twitter API Access Token Secret",
+                "type": "string"
               }
-            }
-          }
+            },
+            "requried": ["consumerKey", "consumerSecret", "accessTokenKey", "accessTokenSecret" ]
+          },
+          "required": ["options", "credentials"]
         }
       }
     },
     "message": {
       "twitter-action": {
+        "title": "Twitter Action",
         "type": "object",
         "properties": {
           "command": {
-            "type": "string",
             "title": "Command",
-            "required": true,
+            "type": "string",
             "enum": [
               "start",
-              "stop",
-              "post",
-              "get"
+              "stop"
             ]
           },
-          "request": {
-            "type": "object",
-            "title": "Request (for \"get\" and \"post\")",
-            "properties": {
-              "endpoints": {
-                "type": "string",
-                "title": "Endpoint",
-                "default": "statuses/user_timeline"
-              },
-              "params": {
-                "type": "object",
-                "title": "Params for Request",
-                "default": {}
-              }
-            }
-          }
+          "required": ["command"]
         }
       }
     }

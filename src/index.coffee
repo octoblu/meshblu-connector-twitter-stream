@@ -1,43 +1,41 @@
-{EventEmitter}  = require 'events'
-debug           = require('debug')('meshblu-connector-twitter-stream:index')
 _               = require 'lodash'
+{EventEmitter}  = require 'events'
 TwitterStream   = require './twitter-stream.coffee'
-TwitterRequest  = require './twitter-request.coffee'
+debug           = require('debug')('meshblu-connector-twitter-stream:index')
 
 class TwitterStreamConnector extends EventEmitter
   constructor: ->
     @COMMANDS =
       start: 'startStreaming'
       stop:  'stopStreaming'
-      get:   'getRequest'
-      post:  'postRequest'
-    debug 'TwitterStream constructed'
+    @emitTweet = _.throttle @_emitTweet, 100, { leading: true }
 
   isOnline: (callback) =>
-    callback null, running: true
+    callback null, { running: !!@twitterStream }
 
   close: (callback) =>
-    debug 'on close'
+    @stopStreaming()
     callback()
 
-  onMessage: (message) =>
-    return unless message.payload?
-    { request, command } = message.payload
+  onMessage: ({ payload }={}) =>
+    { command } = payload ? {}
+    return @emitError('invalid command') unless command?
     action = @COMMANDS[command]
-    return unless action?
+    return @emitError('invalid action') unless action?
     debug 'running command', command
-    @[action](request)
+    @[action]()
 
-  onConfig: (device) =>
-    @options = _.mapValues device.options, (value) =>
+  onConfig: ({ options, credentials }={}) =>
+    options ?= {}
+    @searchQuery = options.searchQuery
+    @credentials = _.mapValues credentials, (value) =>
       return value.trim()
-    debug 'set options', @options
+    debug 'set options', { @searchQuery, @credentials }
 
   start: (device) =>
-    { @uuid } = device
-    debug 'started', @uuid
+    @onConfig device
 
-  emitTweet: (tweet={}) =>
+  _emitTweet: (tweet={}) =>
     debug 'emitting tweet', tweet.id_str
     data =
       devices: ['*']
@@ -51,43 +49,18 @@ class TwitterStreamConnector extends EventEmitter
       devices: ['*']
       topic: 'error'
       error: error
-    @emit 'error', data
+    @emit 'message', data
 
   startStreaming: =>
+    return @emitError('Missing searchQuery') unless @searchQuery
     debug 'starting twitter streamer'
-    twitterCreds =
-      consumer_key: @options.consumerKey
-      consumer_secret: @options.consumerSecret
-      access_token_key: @options.accessTokenKey
-      access_token_secret: @options.accessTokenSecret
-    @twitterStream = new TwitterStream twitterCreds
-    throttleTweet = _.throttle @emitTweet, 100
-    @twitterStream.start @options.searchQuery, throttleTweet, @emitError
+    @twitterStream = new TwitterStream @credentials
+    @twitterStream.start @searchQuery, @emitTweet, @emitError
 
   stopStreaming: =>
     debug 'stopping stream'
     return unless @twitterStream?
     @twitterStream.stop()
     @twitterStream = null
-
-  postRequest: (request={}) ->
-    return @emitError 'Missing endpoints' unless request.endpoints?
-    return @emitError 'Missing params' unless request.params?
-    debug 'posting request'
-    @twitterReq = new TwitterRequest @options unless @twitterReq?
-    @twitterReq.post request, (error, tweet) =>
-      return @emitError(error?.message ? error) if error?
-      debug 'response is', tweet
-      @emitTweet tweet
-
-  getRequest: (request={}) =>
-    debug 'geting request'
-    return @emitError 'Missing endpoints' unless request.endpoints?
-    return @emitError 'Missing params' unless request.params?
-    @twitterReq = new TwitterRequest @options unless @twitterReq?
-    @twitterReq.get request, (error, tweet) =>
-      return @emitError(error?.message ? error) if error?
-      debug 'response is', tweet
-      @emitTweet tweet
 
 module.exports = TwitterStreamConnector

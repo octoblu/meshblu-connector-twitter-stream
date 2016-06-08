@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-twitter-stream",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Meshblu Connector ",
   "homepage": "https://github.com/octoblu/twitter-stream",
   "bugs": "https://github.com/octoblu/twitter-stream/issues",
@@ -35,7 +35,7 @@
   },
   "meshbluConnector": {
     "githubSlug": "octoblu/meshblu-connector-twitter-stream",
-    "schemasUrl": "https://raw.githubusercontent.com/octoblu/meshblu-connector-twitter-stream/v1.0.1/schemas.json"
+    "schemasUrl": "https://raw.githubusercontent.com/octoblu/meshblu-connector-twitter-stream/v2.0.0/schemas.json"
   },
   "platformDependencies": {
     "darwin": [],
