@@ -1,4 +1,4 @@
-# Unofficial Octoblu Connector - Use at your own riskUnofficial Octoblu Connector - Use at your own risk
+# Unofficial Octoblu Connector - Use at your own risk
 
 # meshblu-connector-twitter-stream
 
